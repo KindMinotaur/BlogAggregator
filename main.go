@@ -2,16 +2,27 @@ package main
 
 import (
 	"database/sql"
-	"log"
-	"os"
 	"home/gingersnap/Projects/BlogAggregator/internal/config"
 	"home/gingersnap/Projects/BlogAggregator/internal/database"
+	"log"
+	"os"
+
 	_ "github.com/lib/pq"
+	"github.com/pressly/goose/v3"
 )
 
 type state struct {
 	db  *database.Queries
 	cfg *config.Config
+}
+
+func migrateDB(db *sql.DB) error {
+	migrationsDir := "sql/schema"
+
+	if err := goose.Up(db, migrationsDir); err != nil {
+		log.Fatalf("error migrating db: %v", err)
+	}
+	return nil
 }
 
 func main() {
@@ -23,6 +34,10 @@ func main() {
 	db, err := sql.Open("postgres", cfg.DBURL)
 	if err != nil {
 		log.Fatalf("error connecting to db: %v", err)
+	}
+	err = migrateDB(db)
+	if err != nil {
+		log.Fatalf("error migrating db: %v", err)
 	}
 	defer db.Close()
 	dbQueries := database.New(db)
@@ -40,6 +55,7 @@ func main() {
 	cmds.register("reset", handlerReset)
 	cmds.register("users", handlerListUsers)
 	cmds.register("agg", handlerAgg)
+	cmds.register("addfeed", handlerAddFeed)
 
 	if len(os.Args) < 2 {
 		log.Fatal("Usage: cli <command> [args...]")
