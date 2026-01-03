@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"home/gingersnap/Projects/BlogAggregator/internal/config"
 )
@@ -33,28 +34,43 @@ type commands struct {
 }
 
 func (c *commands) run(s *state, cmd command) error {
-	return nil
+	if f, ok := c.c[cmd.name]; ok {
+		return f(s, cmd)
+	}
+	log.Fatalf("Unknown command: %v", cmd.name)
 }
 
 func (c *commands) register(name string, f func(*state, command) error) {
-	// Placeholder comment
+	if c.c == nil {
+		c.c = make(map[string]func(*state, command) error)
+	} else if _, exists := c.c[name]; exists {
+		log.Fatalf("Command %v already registered", name)
+	}
+	c.c[name] = f
 }
 
 func main() {
 	cfg, err := config.Read()
 	if err != nil {
-		log.Fatalf("error reading config: %v", err)
-	}
-	fmt.Printf("Read config: %+v\n", cfg)
-
-	err = cfg.SetUser("lane")
-	if err != nil {
-		log.Fatalf("couldn't set current user: %v", err)
+		log.Fatalf("Couldn't read config: %v", err)
 	}
 
-	cfg, err = config.Read()
-	if err != nil {
-		log.Fatalf("error reading config: %v", err)
+	s := &state{
+		config: &cfg,
 	}
-	fmt.Printf("Read config again: %+v\n", cfg)
+	
+	cmds := &commands{}
+	cmds.register("login", handlerLogin)
+	args := os.Args[1:]
+	if len(args) < 2 {
+		log.Fatalln("Please provide a command")
+	}
+	cmd := command{
+		name:      args[0],
+		arguments: args[1:],
+	}
+	err = cmds.run(s, cmd)
+	if err != nil {
+		log.Fatalf("Command %v failed: %v", cmd.name, err)
+	}
 }
