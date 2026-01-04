@@ -5,8 +5,8 @@ import (
 	"log"
 	"os"
 
-	"home/gingersnap/git/BlogAggregator/internal/config"
-	"home/gingersnap/git/BlogAggregator/internal/database"
+	"github.com/KindMinotaur/BlogAggregator/internal/config"
+	"github.com/KindMinotaur/BlogAggregator/internal/database"
 
 	_ "github.com/lib/pq"
 )

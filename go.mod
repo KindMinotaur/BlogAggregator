@@ -1,4 +1,4 @@
-module home/gingersnap/git/BlogAggregator
+module github.com/KindMinotaur/BlogAggregator
 
 go 1.25.4
 
