@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"home/gingersnap/git/BlogAggregator/internal/database"
+	"github.com/KindMinotaur/BlogAggregator/internal/database"
 
 	"github.com/google/uuid"
 )
