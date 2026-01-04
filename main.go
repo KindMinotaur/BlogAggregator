@@ -8,21 +8,11 @@ import (
 	"os"
 
 	_ "github.com/lib/pq"
-	"github.com/pressly/goose/v3"
 )
 
 type state struct {
 	db  *database.Queries
 	cfg *config.Config
-}
-
-func migrateDB(db *sql.DB) error {
-	migrationsDir := "sql/schema"
-
-	if err := goose.Up(db, migrationsDir); err != nil {
-		log.Fatalf("error migrating db: %v", err)
-	}
-	return nil
 }
 
 func main() {
@@ -35,10 +25,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("error connecting to db: %v", err)
 	}
-	err = migrateDB(db)
-	if err != nil {
-		log.Fatalf("error migrating db: %v", err)
-	}
 	defer db.Close()
 	dbQueries := database.New(db)
 
@@ -50,13 +36,15 @@ func main() {
 	cmds := commands{
 		registeredCommands: make(map[string]func(*state, command) error),
 	}
-	cmds.register("login", handlerLogin)
 	cmds.register("register", handlerRegister)
+	cmds.register("login", handlerLogin)
 	cmds.register("reset", handlerReset)
 	cmds.register("users", handlerListUsers)
 	cmds.register("agg", handlerAgg)
 	cmds.register("addfeed", handlerAddFeed)
 	cmds.register("feeds", handlerListFeeds)
+	cmds.register("follow", handlerFollow)
+	cmds.register("following", handlerListFeedFollows)
 
 	if len(os.Args) < 2 {
 		log.Fatal("Usage: cli <command> [args...]")
