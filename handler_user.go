@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 	"time"
-	"home/gingersnap/Projects/BlogAggregator/internal/database"
+
+	"home/gingersnap/git/BlogAggregator/internal/database"
+
 	"github.com/google/uuid"
 )
 
@@ -74,3 +76,4 @@ func handlerListUsers(s *state, cmd command) error {
 	}
 	return nil
 }
+

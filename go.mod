@@ -1,4 +1,4 @@
-module home/gingersnap/Projects/BlogAggregator
+module home/gingersnap/git/BlogAggregator
 
 go 1.25.4
 

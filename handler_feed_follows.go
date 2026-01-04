@@ -3,8 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
-	"home/gingersnap/Projects/BlogAggregator/internal/database"
 	"time"
+
+	"home/gingersnap/git/BlogAggregator/internal/database"
+
 	"github.com/google/uuid"
 )
 

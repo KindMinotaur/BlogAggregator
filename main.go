@@ -2,10 +2,11 @@ package main
 
 import (
 	"database/sql"
-	"home/gingersnap/Projects/BlogAggregator/internal/config"
-	"home/gingersnap/Projects/BlogAggregator/internal/database"
 	"log"
 	"os"
+
+	"home/gingersnap/git/BlogAggregator/internal/config"
+	"home/gingersnap/git/BlogAggregator/internal/database"
 
 	_ "github.com/lib/pq"
 )
